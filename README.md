@@ -24,6 +24,8 @@ Combined with [cats-effect](https://typelevel.org/cats-effect/) asynchronous run
 
 ## Running
 
+See the example http4s routes provider [here](./blob/main/src/main/scala/com/perikov/osgi/http4s/whiteboard/server/SampleRoutes.scala)
+
 The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml)).
 
 The project uses [declarative services](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html). In Karaf you can install them with `feature:install scr`
