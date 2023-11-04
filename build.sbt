@@ -25,7 +25,6 @@ ThisBuild / libraryDependencies ++=
   ) ++
     Seq(
       "org.osgi" % "org.osgi.service.component" % "1.5.1",
-      "org.osgi" % "org.osgi.service.log" % "1.4.0",
       "org.osgi" % "org.osgi.service.component.annotations" % "1.5.1"
     )
 
@@ -34,6 +33,7 @@ val api = project
   .enablePlugins(SbtOsgi)
   .settings(
     name := "http4s.whiteboard",
+    description := "Http Whiteboard for scala/cats/http4s",
     osgiSettings,
     OsgiKeys.importPackage := Seq(
       """org.http4s;version="[0.23.19,1.0)"""",
@@ -50,6 +50,7 @@ val server = project
   .enablePlugins(SbtOsgi)
   .settings(
     name := "http4s.whiteboard.server",
+    description := "Http whiteboard implementation",
     osgiSettings,
     OsgiKeys.privatePackage += "com.perikov.osgi.http4s.whiteboard.server",
     OsgiKeys.importPackage := Seq(
@@ -66,4 +67,4 @@ val server = project
   )
 
 val http4s_whiteboard =
-  project.aggregate(api, server)
+  project.aggregate(api, server).settings(skip)
