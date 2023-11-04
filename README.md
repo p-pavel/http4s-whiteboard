@@ -1,11 +1,10 @@
 # http4s-whiteboard
+
 Whiteboard pattern for hosting http4s server in [OSGi](https://docs.osgi.org/specification/) container.
 
 The project is in early stage. 
 
 Here's the simplistic implementation of [HTTP Whiteboard](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.http.whiteboard.html) idea using [http4s](https://http4s.org)
-
-The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf](https://karaf.apache.org)  [feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml))
 
 ## Motivation
 
@@ -15,9 +14,9 @@ The container is observable, controllable, dynamic system. When you replace one 
 
 Each JVM gets enough CPU power to do its magic, not "0.2 vCPU", you don't pay the tax in memory for running every instance of JVM.
 
-The downside is: if you get OOM the whole container goes down. 
+The downside is: if you get OOM the whole container goes down.
 
-The solution is extremely simple though: do not get OOM.
+The solution is extremely simple though: do not get OOM.d
 
 JVM is designed to work for prolonged periods of time and it's fantastic in doing so.
 
@@ -25,8 +24,8 @@ Combined with [cats-effect](https://typelevel.org/cats-effect/) asynchronous run
 
 ## Running
 
+The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml)).
+
+The project uses [declarative services](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html). In Karaf you can install them with `feature:install scr`
+
 ## Future work
-
-
-
-
