@@ -37,12 +37,10 @@ val http4s_whiteboard =
         """cats.effect;cats.effect.kernel;cats.effect.unsafe;version="[3.5.0,4)"""",
         "*"
       ),
-      libraryDependencies ++= Seq("dsl", "ember-server", "ember-client")
+      libraryDependencies ++= Seq("dsl", "ember-server")
         .map(s => "org.http4s" %% s"http4s-$s" % "0.23.23"),
       libraryDependencies += "com.outr" %% "scribe-slf4j" % "3.12.2",
       libraryDependencies ++= Seq(
-        "org.osgi" % "org.osgi.framework" % "1.10.0",
-        "org.osgi" % "org.osgi.core" % "6.0.0",
         "org.osgi" % "org.osgi.service.component" % "1.5.1",
         "org.osgi" % "org.osgi.service.log" % "1.4.0",
         "org.osgi" % "org.osgi.service.component.annotations" % "1.5.1"

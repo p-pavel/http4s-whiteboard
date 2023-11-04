@@ -1,67 +1,37 @@
 package com.perikov.osgi.http4s.whiteboard.server
 
 import com.perikov.osgi.http4s.whiteboard.Http4sIORoutesProvider
-import cats.*
-import cats.effect.*
-import com.comcast.ip4s.*
+import cats.effect.{IO, Ref}
 
-import org.typelevel.log4cats
-import log4cats.Logger
-import log4cats.syntax.*
-
-import org.http4s.ember.server.EmberServerBuilder
-
-trait ServerImpl:
-  def routeBind(r: Http4sIORoutesProvider): IO[Unit]
-  def routeUnbind(r: Http4sIORoutesProvider): IO[Unit]
+class ServerImpl(ref: Ref[IO, RouteStore]) extends Bindings[String, IO[Unit]]:
+  override def routeBind(r: Http4sIORoutesProvider, path: String): IO[Unit] =
+    ref.update(_.routeBind(r, path))
+  override def routeUnbind(r: Http4sIORoutesProvider): IO[Unit] =
+    ref.update(_.routeUnbind(r))
 
 object ServerImpl:
-  import cats.effect.*
-  import cats.data.{OptionT,Kleisli}
+  import cats.effect.Resource
   import org.http4s
-  import http4s.*
-  import cats.implicits.*
+  import http4s.HttpRoutes
+  import http4s.ember.server.EmberServerBuilder
+  import com.comcast.ip4s.{Host, Port}
+  import org.typelevel.log4cats.Logger
 
-  type RouteMap = Set[Http4sIORoutesProvider]
+  private def routes(ref: Ref[IO, RouteStore]): HttpRoutes[IO] =
+    Utils.flattenRoutes(ref.get.map(_.routes))
 
-  private class Data(
-      val routeRef: Ref[IO, RouteMap]
-  )(using Logger[IO]):
-    private def combine(k: Iterable[HttpRoutes[IO]]): HttpRoutes[IO] = 
-      k.fold(HttpRoutes.empty[IO])(_ <+> _)
+  private def serverResource(host: Host, port: Port, routes: HttpRoutes[IO]) =
+    EmberServerBuilder
+      .default[IO]
+      .withHost(host)
+      .withHttpApp(routes.orNotFound)
+      .withPort(port)
+      .build
 
-    private def fl(arg: IO[HttpRoutes[IO]]): HttpRoutes[IO] = 
-      Kleisli( r => OptionT(arg.flatMap(_.run(r).value)) )
-      
-    val routes: HttpRoutes[IO] =
-      fl(routeRef.get.map(m => combine(m.map(_.routes))))
-    
-    def modifyMap(msg: String, op: RouteMap=>RouteMap):IO[Unit] = 
-      routeRef.modify{s => 
-        val oldSize = s.size
-        val newS = op(s)
-        val newSize = newS.size
-        (newS, (oldSize,newSize))
-        }.flatMap((oldSize, newSize) => info"$msg. Size: $oldSize -> $newSize")
-
-  private def emptyMap: RouteMap = Set.empty
-
-  //TODO race conditions when adding and removing routes
-  def resource(port: Port)(using logger: Logger[IO]): Resource[IO, ServerImpl] =
-    def createData: IO[Data] = Ref[IO].of(emptyMap).map(Data(_))
+  def resource(host: Host, port: Port)(using
+      logger: Logger[IO]
+  ): Resource[IO, ServerImpl] =
     for
-      data <- Resource.eval(createData)
-      server <- EmberServerBuilder
-        .default[IO]
-        .withHost(host"0.0.0.0")
-        .withHttpApp(data.routes.orNotFound)
-        .withPort(port)
-        .build
-    yield
-      new:
-
-        override def routeBind(r: Http4sIORoutesProvider): IO[Unit] =
-          data.modifyMap("Adding route", _ + r)
-        override def routeUnbind(r: Http4sIORoutesProvider): IO[Unit] =
-          data.modifyMap("Removing route", _ - r)
-      end new
+      ref <- Resource.eval(Ref[IO].of(RouteStore()))
+      _ <- serverResource(host, port, routes(ref))
+    yield ServerImpl(ref)

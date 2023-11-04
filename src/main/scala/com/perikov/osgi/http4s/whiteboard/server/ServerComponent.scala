@@ -7,14 +7,10 @@ import osgi.service.component as scr
 import scr.annotations.*
 
 import cats.*
-import cats.implicits.*
 import cats.effect.*
 import cats.effect.unsafe.implicits.global
-import com.comcast.ip4s.*
 
-import org.typelevel.log4cats
-import org.osgi.service.component.ComponentContext
-
+import Utils.*
 
 /** OSGi facing component for http4s server */
 @Component(
@@ -25,27 +21,25 @@ import org.osgi.service.component.ComponentContext
       cardinality = ReferenceCardinality.MULTIPLE,
       policy = ReferencePolicy.DYNAMIC,
       bind = "routeBind",
+      updated = "routeBind",
       unbind = "routeUnbind"
     )
   )
 )
 @Config
-class Server private (serverAndStop: (ServerImpl, IO[Unit])):
+class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit]))
+    extends Bindings[Map[String, ?], Unit]:
   private def stop = serverAndStop._2
   private def server = serverAndStop._1
 
   @Activate
   def this(
-      cfg: Config,
-      ctx: ComponentContext
-
+      cfg: Config
   ) =
     this(
       ServerImpl
-        .resource(cfg.port().toPortUnsafe)(using
-          log4cats.slf4j.Slf4jLogger
-            .fromName[IO]("sdfsa")
-            .unsafeRunSync()
+        .resource(toHostUnsafe(cfg.host()), toPortUnsafe(cfg.port()))(using
+          mkLogger
         )
         .allocated
         .unsafeRunSync()
@@ -54,18 +48,10 @@ class Server private (serverAndStop: (ServerImpl, IO[Unit])):
   @Deactivate
   def deactivate = stop.unsafeRunSync()
 
-  def routeBind(r: Http4sIORoutesProvider) =
-    server.routeBind(r).unsafeRunAndForget()
+  def routeBind(r: Http4sIORoutesProvider, props: Map[String, ?]) =
+    server
+      .routeBind(r, props.get("port").map(_.toString()).getOrElse("0.0.0.0"))
+      .unsafeRunAndForget()
 
   def routeUnbind(r: Http4sIORoutesProvider) =
     server.routeUnbind(r).unsafeRunAndForget()
-
-extension (n: Int)
-  @`throws`[IllegalArgumentException]
-  def toPortUnsafe: Port =
-    Port
-      .fromInt(n)
-      .toRight(s"Invalid IP port $n")
-      .leftMap(IllegalArgumentException(_))
-      .toTry
-      .get
