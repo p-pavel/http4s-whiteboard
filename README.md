@@ -16,7 +16,7 @@ Each JVM gets enough CPU power to do its magic, not "0.2 vCPU", you don't pay th
 
 The downside is: if you get OOM the whole container goes down.
 
-The solution is extremely simple though: do not get OOM.d
+The solution is extremely simple though: do not get OOM.
 
 JVM is designed to work for prolonged periods of time and it's fantastic in doing so.
 
