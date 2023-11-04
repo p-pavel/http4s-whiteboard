@@ -1,5 +1,5 @@
 # http4s-whiteboard
-Whiteboard pattern for hosting http4s server in OSGi container.
+Whiteboard pattern for hosting http4s server in [OSGi](https://docs.osgi.org/specification/) container.
 
 The project is in early stage. 
 
