@@ -2,9 +2,13 @@
 
 Whiteboard pattern for hosting http4s server in [OSGi](https://docs.osgi.org/specification/) container.
 
-The project is in early stage. 
+*The project is in its early stage.*
 
 Here's the simplistic implementation of [HTTP Whiteboard](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.http.whiteboard.html) idea using [http4s](https://http4s.org)
+
+Feel free to share your ideas and discuss features at [gitter](https://app.element.io/#/room/#http4s-whiteboard:gitter.im)
+
+**BTW: as of November 2023 I'm actively looking for the Scala job. Please contact me if you have any proposals.**
 
 ## Motivation
 
