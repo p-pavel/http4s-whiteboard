@@ -67,4 +67,4 @@ val server = project
   )
 
 val http4s_whiteboard =
-  project.aggregate(api, server).settings(skip)
+  project.aggregate(api, server)
