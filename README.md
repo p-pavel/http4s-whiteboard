@@ -5,7 +5,7 @@ The project is in early stage.
 
 Here's the simplistic implementation of [HTTP Whiteboard](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.http.whiteboard.html) idea using [http4s](https://http4s.org)
 
-The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml))
+The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf](https://karaf.apache.org)  [feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml))
 
 ## Motivation
 
