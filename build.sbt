@@ -5,23 +5,10 @@ ThisBuild / organization := "com.perikov"
 ThisBuild / versionScheme := Some("early-semver")
 ThisBuild / publishMavenStyle := true
 ThisBuild / scalacOptions ++= Seq(
-  "-java-output-version",
-  "11",
   "-Wunused:all",
   "-deprecation",
   "-explain"
 )
-
-val reposilite: MavenRepository =
-  MavenRepository(
-    "reposilite-repository",
-    "http://beelink:4000/snapshots"
-  )
-    .withAllowInsecureProtocol(true)
-
-ThisBuild / resolvers += reposilite
-ThisBuild / publishTo := Some(reposilite)
-ThisBuild / credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
 
 val http4s_whiteboard =
   project
