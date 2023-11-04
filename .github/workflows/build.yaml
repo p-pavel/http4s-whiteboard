@@ -16,7 +16,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: 11
+          distribution: temurin
+          java-version: 8 
 
       - name: Build and Publish Artifact
         run: sbt osgiBundle
