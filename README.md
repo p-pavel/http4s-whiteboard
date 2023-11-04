@@ -10,13 +10,13 @@ Here's the simplistic implementation of [HTTP Whiteboard](https://docs.osgi.org/
 
 I like deploying to OSGi containers. This is how JVM based microservices should look like, not like tones of docker images each containing its own JVM running in K8s and communicating via snail-fast network RPC.
 
-The container is observable, controllable, dynamic system. When you replace one service everything else keeps running. You got the hot JVM with all the code it pre-compiled and all the optimisation it made so far.
+OSGo container is an observable, controllable, dynamic system. When you replace one service everything else keeps running and all dependencies are automatically updated in container. You keep the hot JVM with all the code it pre-compiled and all the optimisation it made so far.
 
-Each JVM gets enough CPU power to do its magic, not "0.2 vCPU", you don't pay the tax in memory for running every instance of JVM.
+Each JVM gets enough CPU power to do its magic, not "0.2 vCPU" and you don't have to pay the tax in memory for running separate instance of JVM for every microservice.
 
-The downside is: if you get OOM the whole container goes down.
+The downside is: if you get OOM-killed the whole container goes down.
 
-The solution is extremely simple though: do not get OOM.
+The solution is extremely simple though: do not become OOM.
 
 JVM is designed to work for prolonged periods of time and it's fantastic in doing so.
 
