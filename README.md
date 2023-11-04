@@ -26,6 +26,31 @@ Combined with [cats-effect](https://typelevel.org/cats-effect/) asynchronous run
 
 See the example http4s routes provider [here](./blob/main/src/main/scala/com/perikov/osgi/http4s/whiteboard/server/SampleRoutes.scala)
 
+```sh
+karaf
+karaf@root()> feature:install scr # declarative component runtime
+karaf@root()> feature:repo-add https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml # Scala libraries
+karaf@root()> feature:install http4s 
+karaf@root()> bundle:install -s https://github.com/p-pavel/http4s-whiteboard/releases/download/v0.1.0-SNAPSHOT/http4s-whiteboard_3-0.1.0-SNAPSHOT.jar
+karaf@root()> scr:list
+# ServiceComponentRuntimeMBean in bundle 53 (org.apache.karaf.scr.management:4.4.4) enabled, 1 instance.
+#    Id: 0, State:ACTIVE
+# ServiceComponentRuntimeBundleStateService in bundle 54 (org.apache.karaf.scr.state:4.4.4) enabled, 1 instance.
+#    Id: 1, State:ACTIVE
+# com.perikov.osgi.http4s.whiteboard.server.Server in bundle 56 (com.perikov.http4s.whiteboard:0.1.0.SNAPSHOT) enabled, 1 instance.
+#    Id: 2, State:ACTIVE
+# com.perikov.osgi.http4s.whiteboard.server.SampleRoute in bundle 56 (com.perikov.http4s.whiteboard:0.1.0.SNAPSHOT) disabled, 0 instances.
+karaf@root()> scr:enable SampleRoute
+```
+
+Now you server is running on port 8801.
+
+You can change the port via configuration (container will restart the server automagically):
+
+```sh
+karaf@root()> config:property-set -p  com.perikov.osgi.http4s.whiteboard.server.Server port 8802
+```
+
 The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml)).
 
 The project uses [declarative services](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html). In Karaf you can install them with `feature:install scr`
