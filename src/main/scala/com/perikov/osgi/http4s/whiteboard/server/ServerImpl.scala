@@ -1,6 +1,6 @@
 package com.perikov.osgi.http4s.whiteboard.server
 
-import com.perikov.osgi.http4s.whiteboard.Http4sIORoute
+import com.perikov.osgi.http4s.whiteboard.Http4sIORoutesProvider
 import cats.*
 import cats.effect.*
 import com.comcast.ip4s.*
@@ -12,8 +12,8 @@ import log4cats.syntax.*
 import org.http4s.ember.server.EmberServerBuilder
 
 trait ServerImpl:
-  def routeBind(r: Http4sIORoute): IO[Unit]
-  def routeUnbind(r: Http4sIORoute): IO[Unit]
+  def routeBind(r: Http4sIORoutesProvider): IO[Unit]
+  def routeUnbind(r: Http4sIORoutesProvider): IO[Unit]
 
 object ServerImpl:
   import cats.effect.*
@@ -22,7 +22,7 @@ object ServerImpl:
   import http4s.*
   import cats.implicits.*
 
-  type RouteMap = Set[Http4sIORoute]
+  type RouteMap = Set[Http4sIORoutesProvider]
 
   private class Data(
       val routeRef: Ref[IO, RouteMap]
@@ -34,7 +34,7 @@ object ServerImpl:
       Kleisli( r => OptionT(arg.flatMap(_.run(r).value)) )
       
     val routes: HttpRoutes[IO] =
-      fl(routeRef.get.map(m => combine(m.map(Kleisli(_)))))
+      fl(routeRef.get.map(m => combine(m.map(_.routes))))
     
     def modifyMap(msg: String, op: RouteMap=>RouteMap):IO[Unit] = 
       routeRef.modify{s => 
@@ -60,8 +60,8 @@ object ServerImpl:
     yield
       new:
 
-        override def routeBind(r: Http4sIORoute): IO[Unit] =
+        override def routeBind(r: Http4sIORoutesProvider): IO[Unit] =
           data.modifyMap("Adding route", _ + r)
-        override def routeUnbind(r: Http4sIORoute): IO[Unit] =
+        override def routeUnbind(r: Http4sIORoutesProvider): IO[Unit] =
           data.modifyMap("Removing route", _ - r)
       end new

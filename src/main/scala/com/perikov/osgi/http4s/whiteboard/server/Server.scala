@@ -1,6 +1,6 @@
 package com.perikov.osgi.http4s.whiteboard.server
 
-import com.perikov.osgi.http4s.whiteboard.Http4sIORoute
+import com.perikov.osgi.http4s.whiteboard.Http4sIORoutesProvider
 
 import org.osgi
 import osgi.service.component as scr
@@ -21,7 +21,7 @@ import org.osgi.service.component.ComponentContext
   reference = Array(
     new Reference(
       name = "Funcs",
-      service = classOf[Http4sIORoute],
+      service = classOf[Http4sIORoutesProvider],
       cardinality = ReferenceCardinality.MULTIPLE,
       policy = ReferencePolicy.DYNAMIC,
       bind = "routeBind",
@@ -54,10 +54,10 @@ class Server private (serverAndStop: (ServerImpl, IO[Unit])):
   @Deactivate
   def deactivate = stop.unsafeRunSync()
 
-  def routeBind(r: Http4sIORoute) =
+  def routeBind(r: Http4sIORoutesProvider) =
     server.routeBind(r).unsafeRunAndForget()
 
-  def routeUnbind(r: Http4sIORoute) =
+  def routeUnbind(r: Http4sIORoutesProvider) =
     server.routeUnbind(r).unsafeRunAndForget()
 
 extension (n: Int)
