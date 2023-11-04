@@ -27,8 +27,7 @@ import Utils.*
   )
 )
 @Config
-class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit]))
-    extends Bindings[Map[String, ?], Unit]:
+class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit])):
   private def stop = serverAndStop._2
   private def server = serverAndStop._1
 

@@ -12,6 +12,6 @@ class SampleRoute extends Http4sIORoutesProvider:
   import dsl.*
   val routes: HttpRoutes[IO] = HttpRoutes.of {
     case GET -> _ => (
-      IO.realTimeInstant flatMap (t => Ok(s"Current time is $t"))
+      IO.realTimeInstant `flatMap` (t => Ok(s"Current time is $t"))
     )
   }
