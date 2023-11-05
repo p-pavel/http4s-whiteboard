@@ -10,6 +10,9 @@ import cats.*
 import cats.effect.*
 import cats.effect.unsafe.implicits.global
 
+import java.util as ju
+import scala.jdk.CollectionConverters.*
+
 import Utils.*
 
 /** OSGi facing component for http4s server */
@@ -47,9 +50,10 @@ class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit])):
   @Deactivate
   def deactivate = stop.unsafeRunSync()
 
-  def routeBind(r: Http4sIORoutesProvider, props: Map[String, ?]) =
+  def routeBind(r: Http4sIORoutesProvider, props: ju.Map[String, ?]) =
+    val path = props.asScala.get("path").map(_.toString).getOrElse("/")
     server
-      .routeBind(r, props.get("port").map(_.toString()).getOrElse("0.0.0.0"))
+      .routeBind(r, path)
       .unsafeRunAndForget()
 
   def routeUnbind(r: Http4sIORoutesProvider) =
