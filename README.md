@@ -2,8 +2,6 @@
 
 Whiteboard pattern for hosting http4s server in [OSGi](https://docs.osgi.org/specification/) container.
 
-*The project is in its early stage.*
-
 Here's the simplistic implementation of [HTTP Whiteboard](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.http.whiteboard.html) idea using [http4s](https://http4s.org)
 
 Feel free to share your ideas and discuss features at [gitter](https://app.element.io/#/room/#http4s-whiteboard:gitter.im)
@@ -14,7 +12,7 @@ Feel free to share your ideas and discuss features at [gitter](https://app.eleme
 
 I like deploying to OSGi containers. This is how JVM based microservices should look like, not like tones of docker images each containing its own JVM running in K8s and communicating via snail-fast network RPC.
 
-OSGo container is an observable, controllable, dynamic system. When you replace one service everything else keeps running and all dependencies are automatically updated in container. You keep the hot JVM with all the code it pre-compiled and all the optimisation it made so far.
+OSGi container is an observable, controllable, dynamic system. When you replace one service everything else keeps running and all dependencies are automatically updated in container. You keep the hot JVM with all the code it pre-compiled and all the optimisation it made so far.
 
 Each JVM gets enough CPU power to do its magic, not "0.2 vCPU" and you don't have to pay the tax in memory for running separate instance of JVM for every microservice.
 
