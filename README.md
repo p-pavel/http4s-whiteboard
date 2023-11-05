@@ -35,7 +35,7 @@ See the example http4s routes provider [here](./blob/main/src/main/scala/com/per
 
 ```sh
 karaf
-karaf@root()> feature:repo-add https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml # Scala libraries
+karaf@root()> feature:repo-add https://raw.githubusercontent.com/p-pavel/osgi-scala/main/scala-libs.xml# Scala libraries
 karaf@root()> feature:repo-add https://raw.githubusercontent.com/p-pavel/http4s-whiteboard/feature.xml # repo containing http4s-whiteboard feature
 karaf@root()> feature:install com.perikov.http4s-whiteboard
 karaf@root()> scr:list
