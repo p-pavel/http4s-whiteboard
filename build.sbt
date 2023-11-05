@@ -8,15 +8,16 @@ ThisBuild / scalacOptions ++= Seq(
   "-Wunused:all",
   "-deprecation",
   "-explain",
+  "-feature",
   "-rewrite",
   "-source",
   "future",
-   "-java-output-version", "8",
+  "-java-output-version",
+  "8",
   "-new-syntax"
 )
 ThisBuild / publishLocalConfiguration := publishLocalConfiguration.value
   .withOverwrite(true)
-
 
 ThisBuild / libraryDependencies ++=
   Seq("dsl", "ember-server").map(s =>
@@ -25,7 +26,7 @@ ThisBuild / libraryDependencies ++=
     Seq(
       "org.osgi" % "org.osgi.service.component" % "1.5.1",
       "org.osgi" % "org.osgi.service.component.annotations" % "1.5.1",
-      "org.osgi" % "org.osgi.framework" % "1.10.0", 
+      "org.osgi" % "org.osgi.framework" % "1.10.0"
     )
 
 val api = project
@@ -53,8 +54,12 @@ val server = project
     version := "0.1.0-SNAPSHOT",
     name := "http4s.whiteboard.server",
     description := "Http whiteboard implementation",
+    libraryDependencies ++= Seq("table", "core").map(s =>
+      "org.apache.karaf.shell" % s"org.apache.karaf.shell.$s" % "4.1.0"
+    ),
     osgiSettings,
-    OsgiKeys.privatePackage += "com.perikov.osgi.http4s.whiteboard.server",
+    OsgiKeys.additionalHeaders := Map("Karaf-Commands" -> "com.perikov.osgi.http4s.whiteboard.server.commands*"),
+    OsgiKeys.privatePackage += "com.perikov.osgi.http4s.whiteboard.server*",
     OsgiKeys.importPackage := Seq(
       """org.http4s;org.http4s.syntax;org.http4s.dsl.impl;org.http4s.server;org.http4s.ember.server;org.http4s.dsl;version="[0.23.19,1.0)"""",
       """fs2.io;fs2.io.net;version="[3.7.0,4)"""",
@@ -65,10 +70,11 @@ val server = project
       """cats.effect;cats.effect.kernel;cats.effect.unsafe;version="[3.5.0,4)"""",
       "*"
     )
-
   )
 
 val http4s_whiteboard =
-  project.aggregate(api, server).settings(
-    publish / skip := true,
-  )
+  project
+    .aggregate(api, server)
+    .settings(
+      publish / skip := true
+    )

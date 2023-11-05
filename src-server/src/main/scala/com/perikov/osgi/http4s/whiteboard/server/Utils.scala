@@ -11,7 +11,7 @@ case class ProviderInfo(path: String, props: Map[String, ?])
 trait ProviderRegistry extends Iterable[ProviderInfo]
 
 /** an abstraction of operations for adding and removing
-  * [[Http4sIORoutesProvicer]]
+  * [[Http4sIORoutesProvider]]
   */
 trait Bindings[Info, Res]:
   def routeBind(r: Http4sIORoutesProvider, info: Info): Res

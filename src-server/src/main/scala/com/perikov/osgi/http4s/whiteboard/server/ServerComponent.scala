@@ -15,6 +15,7 @@ import scala.jdk.CollectionConverters.*
 
 import Utils.*
 
+
 /** OSGi facing component for http4s server */
 @Component(
   service = Array(classOf[ProviderRegistry]),
@@ -51,14 +52,16 @@ class ServerComponent private (serverAndStop: (Ref[IO, RouteStore], IO[Unit]))
         .routeStoreResource(toHostUnsafe(cfg.host()), toPortUnsafe(cfg.port()))(
           using mkLogger // TODO: deside about logger
         )
-        .allocated
-        .unsafeRunSync()
+        .allocated.unsafeRunSync()
     )
 
   @Deactivate
   def deactivate = stop.unsafeRunSync()
 
-  def routeBind(r: Http4sIORoutesProvider, jProps: ju.Map[String, ?]) =
+  override def routeBind(
+      r: Http4sIORoutesProvider,
+      jProps: ju.Map[String, ?]
+  ): Unit =
     val props = jProps.asScala.toMap
     val path = props
       .get("path")
@@ -67,7 +70,7 @@ class ServerComponent private (serverAndStop: (Ref[IO, RouteStore], IO[Unit]))
 
     storeRef
       .update(_.routeBind(r, ProviderInfo(path, props)))
-      .unsafeRunAndForget()
+      .unsafeRunSync()
 
-  def routeUnbind(r: Http4sIORoutesProvider) =
-    storeRef.update(_.routeUnbind(r)).unsafeRunAndForget()
+  override def routeUnbind(r: Http4sIORoutesProvider): Unit =
+    storeRef.update(_.routeUnbind(r)).unsafeRunSync()
