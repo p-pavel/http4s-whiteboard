@@ -6,7 +6,7 @@ import com.perikov.osgi.http4s.whiteboard.Http4sIORoutesProvider
 
 @Component(
   enabled = false,
-  property = Array("path:String=/")
+  property = Array("path:String=/time")
 )
 class SampleRoute extends Http4sIORoutesProvider:
   import dsl.*
