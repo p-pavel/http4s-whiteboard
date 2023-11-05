@@ -61,7 +61,7 @@ You can change the port via configuration (container will restart the server aut
 karaf@root()> config:property-set -p  com.perikov.osgi.http4s.whiteboard.server.Server port 8802
 ```
 
-The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml)).
+The project needs Scala libraries hosted in OSGi container to run (you can find [Karaf feature repository here](https://github.com/p-pavel/osgi-scala)).
 
 The project uses [declarative services](https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html). In Karaf you can install them with `feature:install scr`
 
