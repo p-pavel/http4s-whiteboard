@@ -8,6 +8,11 @@ Feel free to share your ideas and discuss features at [gitter](https://app.eleme
 
 **BTW: as of November 2023 I'm actively looking for the Scala job. Please contact me if you have any proposals.**
 
+Also, you can 
+
+<a href="https://www.buymeacoffee.com/perikov" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Beer" style="height: 60px !important;width: 217px !important;" ></a>
+
+
 ## Motivation
 
 I like deploying to OSGi containers. This is how JVM based microservices should look like, not like tones of docker images each containing its own JVM running in K8s and communicating via snail-fast network RPC.
