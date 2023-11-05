@@ -67,4 +67,6 @@ val server = project
   )
 
 val http4s_whiteboard =
-  project.aggregate(api, server)
+  project.aggregate(api, server).settings(
+    publish / skip := true,
+  )
