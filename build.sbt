@@ -2,7 +2,6 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / organization := "com.perikov"
-ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / versionScheme := Some("early-semver")
 ThisBuild / publishMavenStyle := true
 ThisBuild / scalacOptions ++= Seq(
@@ -33,6 +32,7 @@ val api = project
   .in(file("src-api"))
   .enablePlugins(SbtOsgi)
   .settings(
+    version := "1.0.0",
     name := "http4s.whiteboard",
     description := "Http Whiteboard for scala/cats/http4s",
     osgiSettings,
@@ -50,6 +50,7 @@ val server = project
   .dependsOn(api)
   .enablePlugins(SbtOsgi)
   .settings(
+    version := "0.1.0-SNAPSHOT",
     name := "http4s.whiteboard.server",
     description := "Http whiteboard implementation",
     osgiSettings,
