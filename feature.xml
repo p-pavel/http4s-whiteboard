@@ -1,4 +1,4 @@
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="http-whiteboard">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="http4s-whiteboard">
   <feature name="http4s-whiteboard" version="1.0.0" description="HTTP Whiteboard service implemented using http4s">
     <feature prerequisite="true">wrap</feature>
     <feature prerequisite="true">scala-std-lib</feature>
