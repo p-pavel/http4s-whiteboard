@@ -32,10 +32,9 @@ See the example http4s routes provider [here](./blob/main/src/main/scala/com/per
 
 ```sh
 karaf
-karaf@root()> feature:install scr # declarative component runtime
 karaf@root()> feature:repo-add https://raw.githubusercontent.com/p-pavel/osgi-experiments/main/features.xml # Scala libraries
-karaf@root()> feature:install http4s 
-karaf@root()> bundle:install -s https://github.com/p-pavel/http4s-whiteboard/releases/download/v0.1.0-SNAPSHOT/http4s-whiteboard_3-0.1.0-SNAPSHOT.jar
+karaf@root()> repo-add https://raw.githubusercontent.com/p-pavel/http4s-whiteboard/feature.xml/feature.xml # repo containing http4s-whiteboard feature
+karaf@root()> feature:install com.perikov.http4s-whiteboard
 karaf@root()> scr:list
 # ServiceComponentRuntimeMBean in bundle 53 (org.apache.karaf.scr.management:4.4.4) enabled, 1 instance.
 #    Id: 0, State:ACTIVE
@@ -45,6 +44,10 @@ karaf@root()> scr:list
 #    Id: 2, State:ACTIVE
 # com.perikov.osgi.http4s.whiteboard.server.SampleRoute in bundle 56 (com.perikov.http4s.whiteboard:0.1.0.SNAPSHOT) disabled, 0 instances.
 karaf@root()> scr:enable SampleRoute
+karaf@root()> http4s:list
+# path  │ service.bundleid │ service.id │ component.name
+# ──────┼──────────────────┼────────────┼──────────────────────────────────────────────────────
+# /time │ 84               │ 109        │ com.perikov.osgi.http4s.whiteboard.server.SampleRoute
 ```
 
 Now you server is running on port 8801.
