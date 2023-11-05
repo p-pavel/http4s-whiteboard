@@ -51,7 +51,7 @@ val server = project
   .dependsOn(api)
   .enablePlugins(SbtOsgi)
   .settings(
-    version := "0.1.0-SNAPSHOT",
+    version := "1.0.0",
     name := "http4s.whiteboard.server",
     description := "Http whiteboard implementation",
     libraryDependencies ++= Seq("table", "core").map(s =>
