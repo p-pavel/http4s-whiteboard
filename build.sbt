@@ -25,7 +25,8 @@ ThisBuild / libraryDependencies ++=
   ) ++
     Seq(
       "org.osgi" % "org.osgi.service.component" % "1.5.1",
-      "org.osgi" % "org.osgi.service.component.annotations" % "1.5.1"
+      "org.osgi" % "org.osgi.service.component.annotations" % "1.5.1",
+      "org.osgi" % "org.osgi.framework" % "1.10.0", 
     )
 
 val api = project
