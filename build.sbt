@@ -60,7 +60,7 @@ val server = project
       """fs2.io;fs2.io.net;version="[3.7.0,4)"""",
       """com.comcast.ip4s;version="[3.3.0,4)"""",
       """cats;cats.data;cats.syntax;version="[2.9.0,3)"""",
-      """scala.runtime;version="[3.2,4)"""",
+      """scala.runtime;scala.deriving;version="[3.2,4)"""",
       """org.typelevel.log4cats;org.typelevel.log4cats.slf4j;version="[2.6.0,3)"""",
       """cats.effect;cats.effect.kernel;cats.effect.unsafe;version="[3.5.0,4)"""",
       "*"

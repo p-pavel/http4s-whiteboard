@@ -17,9 +17,11 @@ import Utils.*
 
 /** OSGi facing component for http4s server */
 @Component(
+  service = Array(classOf[ProviderRegistry]),
+  property = Array("port:Short=8081"),
   reference = Array(
     new Reference(
-      name = "Funcs",
+      name = "providers",
       service = classOf[Http4sIORoutesProvider],
       cardinality = ReferenceCardinality.MULTIPLE,
       policy = ReferencePolicy.DYNAMIC,
@@ -30,18 +32,24 @@ import Utils.*
   )
 )
 @Config
-class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit])):
-  private def stop = serverAndStop._2
-  private def server = serverAndStop._1
+class ServerComponent private (serverAndStop: (Ref[IO, RouteStore], IO[Unit]))
+    extends ProviderRegistry,
+      Bindings[ju.Map[String, ?], Unit]:
+
+  private def stop: IO[Unit] = serverAndStop._2
+  private def storeRef: Ref[IO, RouteStore] = serverAndStop._1
+
+  override def iterator: Iterator[ProviderInfo] =
+    storeRef.get.map(_.iterator).unsafeRunSync()
 
   @Activate
   def this(
       cfg: Config
   ) =
     this(
-      ServerImpl
-        .resource(toHostUnsafe(cfg.host()), toPortUnsafe(cfg.port()))(using
-          mkLogger
+      Utils
+        .routeStoreResource(toHostUnsafe(cfg.host()), toPortUnsafe(cfg.port()))(
+          using mkLogger // TODO: deside about logger
         )
         .allocated
         .unsafeRunSync()
@@ -50,11 +58,16 @@ class ServerComponent private (serverAndStop: (ServerImpl, IO[Unit])):
   @Deactivate
   def deactivate = stop.unsafeRunSync()
 
-  def routeBind(r: Http4sIORoutesProvider, props: ju.Map[String, ?]) =
-    val path = props.asScala.get("path").map(_.toString).getOrElse("/")
-    server
-      .routeBind(r, path)
+  def routeBind(r: Http4sIORoutesProvider, jProps: ju.Map[String, ?]) =
+    val props = jProps.asScala.toMap
+    val path = props
+      .get("path")
+      .map(_.toString)
+      .getOrElse("/") // TODO: don't use default, correct README
+
+    storeRef
+      .update(_.routeBind(r, ProviderInfo(path, props)))
       .unsafeRunAndForget()
 
   def routeUnbind(r: Http4sIORoutesProvider) =
-    server.routeUnbind(r).unsafeRunAndForget()
+    storeRef.update(_.routeUnbind(r)).unsafeRunAndForget()
